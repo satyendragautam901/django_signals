@@ -1,9 +1,13 @@
 from django.contrib.auth.signals import user_logged_in,user_logged_out,user_login_failed
 from django.contrib.auth.models import User
 from django.dispatch import receiver
-from django.db.models.signals import pre_init, post_init, pre_save, post_save, pre_delete,post_delete
+from django.db.models.signals import (pre_init, post_init, 
+                                      pre_save, post_save, 
+                                      pre_delete,post_delete,
+                                      pre_migrate, post_migrate)
 from .models import Blog
 from django.core.signals import request_finished, request_started, got_request_exception
+from django.db.backends.signals import connection_created
 # user logged signal
 
 @receiver(user_logged_in, sender = User)# you can also use connect method but receive is more handy
@@ -126,9 +130,45 @@ def requeststarted_signal(sender, **kwargs):
     print(f'kwargs: {kwargs}')
 
 @receiver(got_request_exception) # request got exception signal
-def requeststarted_signal(sender,request, **kwargs):
+def requestgotexception_signal(sender,request, **kwargs):
     print("**************")
     print("Request got exception Signal")
     print("Sender: ", sender) 
     print("Request: ", request)
+    print(f'kwargs: {kwargs}')
+
+# pre and post migrate
+@receiver(pre_migrate)
+def premigrate_signal(sender, app_config, verbosity, interactive
+                      ,using, plan, apps, **kwargs):
+    print("****** Pre migrate Signal ******")
+    print("Sender: ", sender) 
+    print("App config : ", app_config)
+    print("verbosity: ", verbosity)
+    print("Interactive: ", interactive)
+    print("Using: ", using)
+    print("plan: ",plan)
+    print("apps: ", apps)
+    print(f'kwargs: {kwargs}')
+
+@receiver(post_migrate)
+def premigrate_signal(sender, app_config, verbosity, interactive
+                      ,using, plan, apps, **kwargs):
+    
+    print("****** Post migrate Signal ******")
+    print("Sender: ", sender) 
+    print("App config : ", app_config)
+    print("verbosity: ", verbosity)
+    print("Interactive: ", interactive)
+    print("Using: ", using)
+    print("plan: ",plan)
+    print("apps: ", apps)
+    print(f'kwargs: {kwargs}')
+
+# databse connection signal
+@receiver(connection_created)
+def dbconnectsignal(sender, connection, **kwargs):
+    print("****** Database connection Signal ******")
+    print("Sender: ", sender) 
+    print("Connection: ",connection)
     print(f'kwargs: {kwargs}')

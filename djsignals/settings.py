@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog', # instead of blog we can simple write like this 'blog.apps.BlogConfig' so no need to do in init.py file
+    'customsignal',
 ]
 
 MIDDLEWARE = [

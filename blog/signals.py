@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import pre_init, post_init, pre_save, post_save, pre_delete,post_delete
 from .models import Blog
+from django.core.signals import request_finished, request_started, got_request_exception
 # user logged signal
 
 @receiver(user_logged_in, sender = User)# you can also use connect method but receive is more handy
@@ -106,3 +107,28 @@ def postinit_signal(sender, *args, **kwargs):
     print("Sender: ", sender) 
     print(f'Args: {args}')
     print(f'kwargs: {kwargs}') 
+
+# request/response signals
+
+@receiver(request_started) # request started signal
+def requeststarted_signal(sender, environ, **kwargs):
+    print("**************")
+    print("Request started Signal")
+    print("Sender: ", sender) 
+    print("Envion: ", environ)
+    print(f'kwargs: {kwargs}')
+
+@receiver(request_finished) # request finished signal
+def requeststarted_signal(sender, **kwargs):
+    print("**************")
+    print("Request finished Signal")
+    print("Sender: ", sender) 
+    print(f'kwargs: {kwargs}')
+
+@receiver(got_request_exception) # request got exception signal
+def requeststarted_signal(sender,request, **kwargs):
+    print("**************")
+    print("Request got exception Signal")
+    print("Sender: ", sender) 
+    print("Request: ", request)
+    print(f'kwargs: {kwargs}')
